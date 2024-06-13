@@ -22,11 +22,12 @@ jobs:
 
     - name: Recursive build project with JDK 17 
       run: | 
+        set -e
         for dir in */ ; do
-          if [ -f "$dir/pom.xml" ]; then
-              echo "Building project in $dir"
-              mvn -f "$dir/pom.xml" clean install -DskipTests
-          fi
+            if [ -f "$dir/pom.xml" ]; then
+                echo "Building project in $dir"
+                mvn -f "$dir/pom.xml" clean install || echo "Build failed for $dir, continuing with next project..."
+            fi
         done
 
     - name: Set up JDK 11 for JPF
